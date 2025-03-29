@@ -20,9 +20,7 @@ int getParent(int i) {
 void shiftUp(int* array, int childIndex) {
     while (array[childIndex] > array[getParent(childIndex)] && childIndex != 0) {
         int parentIndex = getParent(childIndex);
-        int temp = array[parentIndex];
-        array[parentIndex] = array[childIndex];
-        array[childIndex] = temp;
+        std::swap(array[parentIndex], array[childIndex]);
         childIndex = parentIndex;
     }
 }
@@ -34,14 +32,10 @@ void generateHeap(int* array, int n) {
 }
 
 void sortNonDescending(int* array, int n) {
-    int tempIndex = n;
-
     for (int i = 0; i < n; i++) {
-        int temp = array[0];
-        array[0] = array[tempIndex - 1];
-        array[tempIndex - 1] = temp;
-        tempIndex--;
-        generateHeap(array, tempIndex);
+        int tempRange = n - i - 1;
+        std::swap(array[0], array[tempRange]);
+        generateHeap(array, tempRange);
     }
 }
 
@@ -49,9 +43,8 @@ void sortNonAscending(int* array, int n) {
     sortNonDescending(array, n);
 
     for (int i = 0; i < n / 2; i++) {
-        int temp = array[i];
-        array[i] = array[n - 1 - i];
-        array[n - 1 - i] = temp;
+        int tempIndex = n - i - 1;
+        std::swap(array[i], array[tempIndex]);
     }
 }
 
