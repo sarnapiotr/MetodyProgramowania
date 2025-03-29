@@ -90,6 +90,7 @@ int main()
     }
     else {
         std::cout << "Niepoprawny wybor\n";
+        delete[] array;
         return -1;
     }
 
