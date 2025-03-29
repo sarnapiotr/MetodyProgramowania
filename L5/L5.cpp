@@ -17,17 +17,17 @@ int getParent(int i) {
     return (i - 1) / 2;
 }
 
-void shiftUp(int* array, int childIndex) {
-    while (array[childIndex] > array[getParent(childIndex)] && childIndex != 0) {
+void shiftUp(int* array, int childIndex, bool max) {
+    while (((array[childIndex] > array[getParent(childIndex)] && max) || (array[childIndex] < array[getParent(childIndex)] && !max)) && childIndex != 0) {
         int parentIndex = getParent(childIndex);
         std::swap(array[parentIndex], array[childIndex]);
         childIndex = parentIndex;
     }
 }
 
-void generateHeap(int* array, int n) {
+void generateHeap(int* array, int n, bool max) {
     for (int i = 0; i < n; i++) {
-        shiftUp(array, i);
+        shiftUp(array, i, max);
     }
 }
 
@@ -35,16 +35,15 @@ void sortNonDescending(int* array, int n) {
     for (int i = 0; i < n; i++) {
         int tempRange = n - i - 1;
         std::swap(array[0], array[tempRange]);
-        generateHeap(array, tempRange);
+        generateHeap(array, tempRange, true);
     }
 }
 
 void sortNonAscending(int* array, int n) {
-    sortNonDescending(array, n);
-
-    for (int i = 0; i < n / 2; i++) {
-        int tempIndex = n - i - 1;
-        std::swap(array[i], array[tempIndex]);
+    for (int i = 0; i < n; i++) {
+        int tempRange = n - i - 1;
+        std::swap(array[0], array[tempRange]);
+        generateHeap(array, tempRange, false);
     }
 }
 
@@ -69,7 +68,6 @@ int main()
     generateRandomArray(array, n);
     std::cout << "Tablica przed posortowaniem: \n";
     printArray(array, n);
-    generateHeap(array, n);
 
     std::cout << "1. Sortowanie niemalejace\n";
     std::cout << "2. Sortowanie nierosnace\n";
@@ -80,11 +78,13 @@ int main()
 
     std::cout << "Tablica po posortowaniu: \n";
     if (choice == 1) {
+        generateHeap(array, n, true);
         sortNonDescending(array, n);
         printArray(array, n);
 
     }
     else if (choice == 2) {
+        generateHeap(array, n, false);
         sortNonAscending(array, n);
         printArray(array, n);
     }
