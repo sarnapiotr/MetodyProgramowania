@@ -148,6 +148,12 @@ std::string infixToONP(std::string dane) {
         }
     }
 
+    while (!operators.empty()) {
+        ONP += operators.top();
+        ONP += " ";
+        operators.pop();
+    }
+
     return ONP;
 }
 
