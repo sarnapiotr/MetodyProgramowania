@@ -13,21 +13,27 @@ void generateRandomArray(int* array, int n) {
     }
 }
 
-int getParent(int i) {
-    return (i - 1) / 2;
-}
+void shiftDown(int* array, int tempRange, int rootIndex, bool max) {
+    int largestIndex = rootIndex;
+    int leftIndex = 2 * rootIndex + 1;
+    int rightIndex = leftIndex + 1;
 
-void shiftUp(int* array, int childIndex, bool max) {
-    while (((array[childIndex] > array[getParent(childIndex)] && max) || (array[childIndex] < array[getParent(childIndex)] && !max)) && childIndex != 0) {
-        int parentIndex = getParent(childIndex);
-        std::swap(array[parentIndex], array[childIndex]);
-        childIndex = parentIndex;
+    if (leftIndex < tempRange && ((max && array[leftIndex] > array[largestIndex]) || (!max && array[leftIndex] < array[largestIndex]))) {
+        largestIndex = leftIndex;
+    }
+    if (rightIndex < tempRange && ((max && array[rightIndex] > array[largestIndex]) || (!max && array[rightIndex] < array[largestIndex]))) {
+        largestIndex = rightIndex;
+    }
+
+    if (largestIndex != rootIndex) {
+        std::swap(array[rootIndex], array[largestIndex]);
+        shiftDown(array, tempRange, largestIndex, max);
     }
 }
 
-void generateHeap(int* array, int n, bool max) {
-    for (int i = 0; i < n; i++) {
-        shiftUp(array, i, max);
+void generateHeap(int* array, int tempRange, bool max) {
+    for (int i = tempRange / 2 - 1; i >= 0; i--) {
+        shiftDown(array, tempRange, i, max);
     }
 }
 
