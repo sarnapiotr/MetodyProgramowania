@@ -34,6 +34,18 @@ std::string inputData() {
     }
 }
 
+bool isOperator(const std::string& token) {
+    if (token.length() != 1) return false;
+    char c = token[0];
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+}
+
+bool isParenthesis(const std::string& token) {
+    if (token.length() != 1) return false;
+    char c = token[0];
+    return c == '(' || c == ')';
+}
+
 void calculateONP(std::string dane) {
     std::vector<std::string> daneWektor;
     std::istringstream stream(dane);
@@ -50,9 +62,19 @@ void calculateONP(std::string dane) {
             break;
         }
 
-        if (isdigit(daneWektor[i][0])){
+        if (isdigit(daneWektor[i][0]) || (daneWektor[i][0] == '-' && daneWektor[i].length() > 1 && isdigit(daneWektor[i][1]))) {
             operands.push(std::stod(daneWektor[i]));
             continue;
+        }
+
+        if (!isOperator(daneWektor[i])) {
+            std::cout << "Nieznany token: " << daneWektor[i] << "\n";
+            return;
+        }
+
+        if (operands.size() < 2) {
+            std::cout << "Za malo operandow dla operatora " << daneWektor[i] << "\n";
+            return;
         }
 
         double b = operands.top();
@@ -88,7 +110,11 @@ void calculateONP(std::string dane) {
         }
     }
 
-    wynik << operands.top();
+    if (!operands.empty()) {
+        wynik << operands.top();
+    }
+
+    std::cout << operands.top() << std::endl;
 }
 
 int getPriority(char c) {
@@ -96,11 +122,9 @@ int getPriority(char c) {
     case '+':
     case '-':
         return 1;
-
     case '*':
     case '/':
         return 2;
-
     case '^':
         return 3;
     default:
@@ -121,34 +145,56 @@ std::string infixToONP(std::string dane) {
     std::string ONP = "";
 
     for (int i = 0; i < daneWektor.size(); i++) {
-        char token = daneWektor[i][0];
+        std::string token = daneWektor[i];
 
-        if (isdigit(token)) {
-            ONP += daneWektor[i] + " ";
+        if (token == "=") {
             continue;
         }
-        else if (token == '(') {
-            operators.push(token);
+        else if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
+            ONP += token + " ";
+            continue;
         }
-        else if (token == ')') {
-            while (!operators.empty() && operators.top() != '(') {
+        else if (isParenthesis(token)) {
+            if (token == "(") {
+                operators.push(token[0]);
+            }
+            else if (token == ")") {
+                while (!operators.empty() && operators.top() != '(') {
+                    ONP += operators.top();
+                    ONP += " ";
+                    operators.pop();
+                }
+                if (!operators.empty() && operators.top() == '(') {
+                    operators.pop();
+                }
+                else {
+                    std::cout << "Nieprawidłowe nawiasy\n";
+                    return "";
+                }
+            }
+        }
+        else if (isOperator(token)) {
+            char op = token[0];
+            while (!operators.empty() && operators.top() != '(' &&
+                ((op != '^' && getPriority(op) <= getPriority(operators.top())) ||
+                    (op == '^' && getPriority(op) < getPriority(operators.top())))) {
                 ONP += operators.top();
                 ONP += " ";
                 operators.pop();
             }
-            operators.pop();
+            operators.push(op);
         }
         else {
-            while (!operators.empty() && ((token != '^' && getPriority(token) <= getPriority(operators.top())) || (token == '^' && getPriority(token) < getPriority(operators.top())))) {
-                ONP += operators.top();
-                ONP += " ";
-                operators.pop();
-            }
-            operators.push(token);
+            std::cout << "Nieznany token: " << token << "\n";
+            return "";
         }
     }
 
     while (!operators.empty()) {
+        if (operators.top() == '(') {
+            std::cout << "Nieprawidłowe nawiasy\n";
+            return "";
+        }
         ONP += operators.top();
         ONP += " ";
         operators.pop();
@@ -187,6 +233,7 @@ int main(){
         start = std::chrono::high_resolution_clock::now();
         wynik << infixToONP(dane);
         stop = std::chrono::high_resolution_clock::now();
+        std::cout << infixToONP(dane);
         break;
     case(3):
         dane = inputData();
