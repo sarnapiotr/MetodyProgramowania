@@ -67,16 +67,6 @@ void calculateONP(std::string dane) {
             continue;
         }
 
-        if (!isOperator(daneWektor[i])) {
-            std::cout << "Nieznany token: " << daneWektor[i] << "\n";
-            return;
-        }
-
-        if (operands.size() < 2) {
-            std::cout << "Za malo operandow dla operatora " << daneWektor[i] << "\n";
-            return;
-        }
-
         double b = operands.top();
         operands.pop();
         double a = operands.top();
