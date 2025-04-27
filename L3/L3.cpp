@@ -62,7 +62,7 @@ void calculateONP(std::string dane) {
             break;
         }
 
-        if (isdigit(daneWektor[i][0]) || (daneWektor[i][0] == '-' && daneWektor[i].length() > 1 && isdigit(daneWektor[i][1]))) {
+        if (isdigit(daneWektor[i][0]) || (daneWektor[i][0] == '-' && isdigit(daneWektor[i][1]))) {
             operands.push(std::stod(daneWektor[i]));
             continue;
         }
