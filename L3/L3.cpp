@@ -140,7 +140,7 @@ std::string infixToONP(std::string dane) {
         if (token == "=") {
             continue;
         }
-        else if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
+        else if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
             ONP += token + " ";
             continue;
         }
