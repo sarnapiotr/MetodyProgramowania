@@ -75,7 +75,7 @@ void knapsackProblem(const int& count, const Item itemsArray[], const int& weigh
 
     std::cout << knapsackArray[count][weight];
 
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i <= count; i++) {
         delete[] knapsackArray[i];
     }
     delete[] knapsackArray;
