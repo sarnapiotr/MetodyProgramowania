@@ -73,7 +73,16 @@ void knapsackProblem(const int& count, const Item itemsArray[], const int& weigh
         }
     }
 
-    std::cout << knapsackArray[count][weight];
+    std::cout << "Maksymalna wartosc plecaka wynosi: " << knapsackArray[count][weight] << std::endl;
+
+    std::cout << "Zawartosc plecaka: \n";
+    int remainingWeight = weight;
+    for (int i = count; i > 0 && remainingWeight > 0; i--) {
+        if (knapsackArray[i][remainingWeight] != knapsackArray[i - 1][remainingWeight]) {
+            std::cout << itemsArray[i - 1].weight << " " << itemsArray[i - 1].value << std::endl;
+            remainingWeight -= itemsArray[i - 1].weight;
+        }
+    }
 
     for (int i = 0; i <= count; i++) {
         delete[] knapsackArray[i];
@@ -92,7 +101,7 @@ int main()
 
     Item* itemsArray = new Item[count];
     std::istringstream stream(itemsString);
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i <= count; i++) {
         stream >> itemsArray[i].weight >> itemsArray[i].value;
     }
 
