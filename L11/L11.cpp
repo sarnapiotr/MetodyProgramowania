@@ -68,10 +68,9 @@ void huffmanCoding(std::vector<Node*>& nodeVector) {
 }
 
 void printHuffmanCoding(Node* root, std::string code = "") {
-    if (!root) return;
-
     if (root->value != '\0') {
         std::cout << root->value << " : " << code << std::endl;
+        return;
     }
 
     printHuffmanCoding(root->leftChild, code + "0");
