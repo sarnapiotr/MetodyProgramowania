@@ -11,12 +11,6 @@ bool arePointsEqual(const Point& a, const Point& b) {
     return a.X == b.X && a.Y == b.Y;
 }
 
-double anglePositiveOX(const Point& r, const Point& t) {
-    int dx = t.X - r.X;
-    int dy = t.Y - r.Y;
-    return atan2(dy, dx);
-}
-
 void jarvis(const std::vector<Point>& pointVector, const int& pointCount) {
     if (pointCount < 3) {
         return;
@@ -53,7 +47,7 @@ void jarvis(const std::vector<Point>& pointVector, const int& pointCount) {
         }
         r = pointVector[tempPointIndex];
 
-    } while (!arePointsEqual(r, P0));
+    } while (!arePointsEqual(r, Q0));
 
     for (int i = 0; i < convexHull.size(); i++) {
         std::cout << convexHull[i].X << " " << convexHull[i].Y << std::endl;
