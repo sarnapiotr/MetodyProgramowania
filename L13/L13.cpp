@@ -11,24 +11,20 @@ bool arePointsEqual(const Point& a, const Point& b) {
     return a.X == b.X && a.Y == b.Y;
 }
 
+int vectorProduct(const Point& a, const Point& b, const Point& c) {
+    return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+}
+
 void jarvis(const std::vector<Point>& pointVector, const int& pointCount) {
     if (pointCount < 3) {
         return;
     }
 
     Point P0 = pointVector[0];
-    Point Q0 = pointVector[0];
 
-
-    for (int i = 0; i < pointCount; i++) {
-        if (pointVector[i].Y < P0.Y ) {
+    for (int i = 1; i < pointCount; i++) {
+        if (pointVector[i].Y < P0.Y) {
             P0 = pointVector[i];
-        }
-    }
-
-    for (int i = 0; i < pointCount; i++) {
-        if (pointVector[i].Y > Q0.Y) {
-            Q0 = pointVector[i];
         }
     }
 
@@ -37,17 +33,19 @@ void jarvis(const std::vector<Point>& pointVector, const int& pointCount) {
 
     do {
         convexHull.push_back(r);
+        int tempPointIndex = -1;
 
-        int tempPointIndex = 0;
         for (int i = 0; i < pointCount; i++) {
-            Point t = pointVector[i];
-            if (!arePointsEqual(r, t)) {
+            const Point& t = pointVector[i];
+            if (arePointsEqual(r, t)) continue;
 
+            if (tempPointIndex == -1 || vectorProduct(r, pointVector[tempPointIndex], t) < 0) {
+                tempPointIndex = i;
             }
         }
-        r = pointVector[tempPointIndex];
 
-    } while (!arePointsEqual(r, Q0));
+        r = pointVector[tempPointIndex];
+    } while (!arePointsEqual(r, P0));
 
     for (int i = 0; i < convexHull.size(); i++) {
         std::cout << convexHull[i].X << " " << convexHull[i].Y << std::endl;
