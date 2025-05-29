@@ -1,30 +1,63 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <cmath>
 
-struct Point
-{
+struct Point {
     int X, Y;
 };
 
-void jarvis(const std::vector<Point>& pointVector, const int& pointCout) {
+bool arePointsEqual(const Point& a, const Point& b) {
+    return a.X == b.X && a.Y == b.Y;
+}
+
+double anglePositiveOX(const Point& r, const Point& t) {
+    int dx = t.X - r.X;
+    int dy = t.Y - r.Y;
+    return atan2(dy, dx);
+}
+
+void jarvis(const std::vector<Point>& pointVector, const int& pointCount) {
+    if (pointCount < 3) {
+        return;
+    }
+
     Point P0 = pointVector[0];
     Point Q0 = pointVector[0];
 
-    for (int i = 0; i < pointCout; i++) {
-        if (pointVector[i].Y < P0.Y) {
+
+    for (int i = 0; i < pointCount; i++) {
+        if (pointVector[i].Y < P0.Y ) {
             P0 = pointVector[i];
         }
     }
 
-    for (int i = 0; i < pointCout; i++) {
+    for (int i = 0; i < pointCount; i++) {
         if (pointVector[i].Y > Q0.Y) {
             Q0 = pointVector[i];
         }
     }
 
-    std::cout << "P0: " << P0.X << " " << P0.Y;
-    std::cout << "Q0: " << Q0.X << " " << Q0.Y;
+    std::vector<Point> convexHull;
+    Point r = P0;
+
+    do {
+        convexHull.push_back(r);
+
+        int tempPointIndex = 0;
+        for (int i = 0; i < pointCount; i++) {
+            Point t = pointVector[i];
+            if (!arePointsEqual(r, t)) {
+
+            }
+        }
+        r = pointVector[tempPointIndex];
+
+    } while (!arePointsEqual(r, P0));
+
+    for (int i = 0; i < convexHull.size(); i++) {
+        std::cout << convexHull[i].X << " " << convexHull[i].Y << std::endl;
+    }
 }
 
 int main()
